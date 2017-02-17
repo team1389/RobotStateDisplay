@@ -14,6 +14,7 @@ import draw.Alliance;
 import draw.SimulationField;
 import draw.SimulationRobot;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.networktables.NetworkTablesJNI;
 
 
 public class Run extends BasicGame{
@@ -22,8 +23,9 @@ public class Run extends BasicGame{
 	public static final int height = (int) (376 * scale);
 	
 	public static void main(String[] args) throws SlickException{
-		//NetworkTable.setClientMode();
-		//NetworkTable.setIPAddress("127.0.0.1");
+		NetworkTable.setClientMode();
+		NetworkTable.initialize();
+		//NetworkTablesJNI.startDSClient(port);
 		Run r = new Run("TEST");
 		AppGameContainer cont = new AppGameContainer(r);
 		cont.setTargetFrameRate(70);
@@ -53,7 +55,7 @@ public class Run extends BasicGame{
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
 		//estimator = new PositionEstimator(Alliance.RED, temp, robot.getGearsDroppedOff(), drive.leftIn.getInches() , drive.rightIn.getInches(), drive.leftVel.mapToRange(0, 1).scale(4 * 2 * Math.PI), drive.rightVel.mapToRange(0, 1).scale(4 * 2 * Math.PI), new AngleIn<Position>(Position.class ,() -> robot.getRelativeHeadingDegrees()), 10, 23, .6);
-		estimator = new PositionEstimator();
+		estimator = new PositionEstimator(Alliance.RED);
 		field = new SimulationField(width, height, Alliance.RED);
 		robot = new SimulationRobot(field, Alliance.RED, estimator); 
 
@@ -62,13 +64,13 @@ public class Run extends BasicGame{
 	
 	@Override
 	public void render(GameContainer cont, Graphics g) throws SlickException {
-		field.render(g);
-		robot.render(cont, g);
+		//field.render(g);
+		//robot.render(cont, g);
 	}
 
 	@Override
 	public void update(GameContainer arg0, int delta) throws SlickException {
-		robot.update(delta);
+		//robot.update(delta);
 	}
 	
 	

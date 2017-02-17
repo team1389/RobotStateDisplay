@@ -14,66 +14,61 @@ import com.team1389.trajectory.Translation2d;
 import draw.Alliance;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
-public class PositionEstimator extends RobotStateEstimator{
+public class PositionEstimator{
 
 	Alliance color;
 	RangeIn<Value> gearsDroppedOff;
 	double lastGearValue = 0;
-	public PositionEstimator(Alliance color, RobotState temp, RangeIn<Value> gearsDroppedOff, RangeIn<Position> left, RangeIn<Position> right, RangeIn<Speed> leftS,
-			RangeIn<Speed> rightS, AngleIn<Position> gyro, double trackWidth, double trackLength, double scrub) {
-		super(temp, left, right, leftS, rightS, gyro, trackWidth, trackLength, scrub);
-		this.color = color;
-		this.gearsDroppedOff = gearsDroppedOff;
-	}
+	
 	
 	boolean return0 = false;
-	public PositionEstimator(){
-		super(null, null, null, null, null, null, null);
-		return0 = true;
+	public PositionEstimator(Alliance color){
+		this.color = color;
 	}
 	
-	@Override
 	public RigidTransform2d get(){
 		if(return0){
-			System.out.println("here");
 			return new RigidTransform2d(new Translation2d(Math.random() * 500, Math.random() * 500), Rotation2d.fromDegrees(10));
 		}
+		double x = NetworkTable.getTable("StateEstimator").getNumber("X");
+		double y = NetworkTable.getTable("StateEstimator").getNumber("Y");
+		double theta = NetworkTable.getTable("StateEstimator").getNumber("Degrees");
+		
 		//Check change in gears. Would be different for actual robot
 		double temp = gearsDroppedOff.get();
 		if(temp != lastGearValue){
 			lastGearValue = temp;
-			pickUpGearReset();
+			//pickUpGearReset(theta);
 		}
 		
 		
-		return super.get();
+		
+		return new RigidTransform2d(new Translation2d(x, y), Rotation2d.fromDegrees(theta));
 	}
 	
-	public void publish(){
-		NetworkTable.getTable("StateEstimator").putNumber("X", super.get().getTranslation().getX());
-		NetworkTable.getTable("StateEstimator").putNumber("Y", super.get().getTranslation().getY());
-		NetworkTable.getTable("StateEstimator").putNumber("Degrees", super.get().getRotation().getDegrees());
-		//Not really sure if this will work or if it is the right way
-
-	}
-	
-	public void pickUpGearReset(){
-		double thetaDegrees = gyro.get();
+	private double xShift;
+	private double yShift;
+	public void pickUpGearReset(double thetaDegrees, double rawX, double rawY){
 		if(color.equals(Alliance.RED)){
 			if(thetaDegrees < -40){
-				this.resetToPosition(140, 250, thetaDegrees);
+				//this.resetToPosition(140, 250, thetaDegrees);
 			}
 			else if(thetaDegrees > 40){
-				this.resetToPosition(156, 120, thetaDegrees);
+				//this.resetToPosition(156, 120, thetaDegrees);
 			}
 			else{
-				this.resetToPosition(118, 185, thetaDegrees);
+				//this.resetToPosition(118, 185, thetaDegrees);
 			}
 		}
 		
 		//TODO: Blue alliance
 		
 	}
+	
+	//private double getX(double raw){
+		
+		
+	//}
 	
 	public Alliance getAlliance(){
 		return color;
