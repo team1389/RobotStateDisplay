@@ -14,7 +14,7 @@ import draw.Alliance;
 import draw.SimulationField;
 import draw.SimulationRobot;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.networktables.NetworkTablesJNI;
+import edu.wpi.first.wpilibj.networktables.NetworkTable.*;
 
 
 public class Run extends BasicGame{
@@ -23,8 +23,10 @@ public class Run extends BasicGame{
 	public static final int height = (int) (376 * scale);
 	
 	public static void main(String[] args) throws SlickException{
-		NetworkTable.setClientMode();
+		NetworkTable.setServerMode();
+		NetworkTable.setIPAddress("localhost");
 		NetworkTable.initialize();
+		NetworkTable.globalDeleteAll();
 		//NetworkTablesJNI.startDSClient(port);
 		Run r = new Run("TEST");
 		AppGameContainer cont = new AppGameContainer(r);
