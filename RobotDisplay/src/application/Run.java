@@ -27,7 +27,7 @@ public class Run extends BasicGame{
 		NetworkTable.setIPAddress("127.0.0.1");
 		NetworkTable.initialize();
 
-		Run r = new Run("TEST");
+		Run r = new Run("Position Estimator");
 		AppGameContainer cont = new AppGameContainer(r);
 		cont.setTargetFrameRate(70);
 		cont.setFullscreen(true);
@@ -60,9 +60,18 @@ public class Run extends BasicGame{
 
 	@Override
 	public void update(GameContainer arg0, int delta) throws SlickException {
-		boolean placed = estimation.getBoolean(EstimatorTableKeys.GEARPLACED.key, false);
+		boolean placed = estimation.getBoolean(EstimatorTableKeys.GEAR_PLACED.key, false);
 		if(placed){
-			estimation.putBoolean(EstimatorTableKeys.GEARPLACED.key, false);
+			estimation.putBoolean(EstimatorTableKeys.GEAR_PLACED.key, false);
+		}
+		if(estimation.getNumber(EstimatorTableKeys.ACCELERATION_MAGNITUDE.key, -1) == 0){
+			double x = robot.getX();
+			double y = robot.getY();
+			robot.setPosition(estimation.getNumber(EstimatorTableKeys.X_POSITION.key, 0),
+					estimation.getNumber(EstimatorTableKeys.Y_POSITION.key, 0), 
+					estimation.getNumber(EstimatorTableKeys.ANGLE_DEGREES.key, 0),
+					placed);	
+			robot.setAbsolutePosition(x, y);
 		}
 		robot.setPosition(estimation.getNumber(EstimatorTableKeys.X_POSITION.key, 0),
 				estimation.getNumber(EstimatorTableKeys.Y_POSITION.key, 0), 
@@ -72,13 +81,13 @@ public class Run extends BasicGame{
 	}
 
 	private enum EstimatorTableKeys {
-		X_POSITION("x"), Y_POSITION("y"), ANGLE_DEGREES("angle"), GEAR("gear"), GEARPLACED("placed");
+		X_POSITION("x"), Y_POSITION("y"), ANGLE_DEGREES("angle"), GEAR("gear"), GEAR_PLACED("placed"), ACCELERATION_MAGNITUDE("accel");
 		protected final String key;
 		private EstimatorTableKeys(String key) {
 			this.key = key;
 		}
 	}
 
-	
+
 
 }

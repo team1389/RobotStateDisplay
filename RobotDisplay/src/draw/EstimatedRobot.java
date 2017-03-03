@@ -31,7 +31,7 @@ public class EstimatedRobot {
 	double theta;
 	private double yTranslate = 0;
 	private double xTranslate = 0;
-	
+
 	public EstimatedRobot(SimulationField field) {
 		this(field, Alliance.RED);
 	}
@@ -46,21 +46,11 @@ public class EstimatedRobot {
 		}
 	}
 
-	
-
 	private Image generateRobotImage() throws SlickException {
 		return new Image(useBumpers
 				? alliance == Alliance.BLUE ? Resources.blueAllianceRobotImage : Resources.redAllianceRobotImage
-				: Resources.robotImage);
+						: Resources.robotImage);
 	}
-
-	public void startMatch() {
-		x = 0;
-		y = 0;
-	}
-
-	
-
 
 	public void setPosition(double x, double y, double theta, boolean placed) {
 		this.x = x;
@@ -71,10 +61,10 @@ public class EstimatedRobot {
 			placingGearReset();
 		}*/
 		if(placed) placingGearReset();
-		
+
 
 	}
-	
+
 	private Gear getGear(int gear) {
 		try{
 			return Gear.values()[gear];
@@ -101,11 +91,21 @@ public class EstimatedRobot {
 				setAbsolutePosition(118, 185);
 			}
 		}
-		
-		//TODO: Blue alliance
-		
+		else{
+			if(theta < 165){
+				setAbsolutePosition(562, 132);
+			}
+			else if(theta > 205){
+				setAbsolutePosition(569, 242);
+			}
+			else{
+				setAbsolutePosition(596, 185);
+			}
+		}
+
+
 	}
-	
+
 	/**
 	 * Scale assumed to be 1 for input values
 	 */
@@ -126,10 +126,18 @@ public class EstimatedRobot {
 	public void render(GameContainer container, Graphics g){
 		robot.setRotation((float) theta + 90);
 		robot.setCenterOfRotation(robotWidth / 2, robotHeight / 2);
-		robot.drawCentered((float)(x + xTranslate), (float)(y + yTranslate));
+		robot.drawCentered((float)(getX()), (float)(getY()));
 	}
 	
+	public double getX(){
+		return x + xTranslate;
+	}
 	
-	
+	public double getY(){
+		return y + yTranslate;
+	}
+
+
+
 
 }
