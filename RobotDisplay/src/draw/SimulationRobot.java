@@ -36,14 +36,12 @@ public class SimulationRobot {
 	double x;
 	double y;
 	double theta;
-	private PositionEstimator positionEstimator;
 	
-	public SimulationRobot(SimulationField field, PositionEstimator estimator) {
-		this(field, Alliance.RED, estimator);
+	public SimulationRobot(SimulationField field) {
+		this(field, Alliance.RED);
 	}
 
-	public SimulationRobot(SimulationField field, Alliance alliance, PositionEstimator estimator) {
-		this.positionEstimator = estimator;
+	public SimulationRobot(SimulationField field, Alliance alliance) {
 		this.field = field;
 		this.alliance = alliance;
 		try {
@@ -66,16 +64,15 @@ public class SimulationRobot {
 		y = 0;
 	}
 
-	public void update(double dt) {
-		updateRobotPosition(dt);
-	}
+	
 
 
-	protected void updateRobotPosition(double dt) {
-		x = positionEstimator.get().getTranslation().getX();
-		y = positionEstimator.get().getTranslation().getY();
-		theta = positionEstimator.get().getRotation().getDegrees();
+	public void setPosition(double x, double y, double theta) {
+		this.x = x;
+		this.y = y;
+		this.theta = theta;
 	}
+	
 
 
 	public Alliance getAlliance() {
