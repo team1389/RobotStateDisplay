@@ -12,7 +12,7 @@ import com.team1389.trajectory.RigidTransform2d;
 
 import draw.Alliance;
 import draw.SimulationField;
-import draw.SimulationRobot;
+import draw.EstimatedRobot;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.networktables.NetworkTable.*;
 
@@ -21,7 +21,6 @@ public class Run extends BasicGame{
 	public static int scale = 1;
 	public static final int width = (int) (716 * scale);
 	public static final int height = (int) (376 * scale);
-	NetworkTable estimation;
 
 	public static void main(String[] args) throws SlickException{
 		NetworkTable.setClientMode();
@@ -41,20 +40,15 @@ public class Run extends BasicGame{
 		super(title);
 	}
 
-
-
-	SimulationRobot robot;
+	NetworkTable estimation;
+	EstimatedRobot robot;
 	SimulationField field;
-
-
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
 		estimation = NetworkTable.getTable("estimator");
 		field = new SimulationField(width, height, Alliance.RED);
-		robot = new SimulationRobot(field, Alliance.RED); 
-
-
+		robot = new EstimatedRobot(field, Alliance.RED); 
 	}
 
 	@Override
@@ -65,9 +59,12 @@ public class Run extends BasicGame{
 
 	@Override
 	public void update(GameContainer arg0, int delta) throws SlickException {
+		
 		robot.setPosition(estimation.getNumber(EstimatorTableKeys.X_POSITION.key, 0),
 				estimation.getNumber(EstimatorTableKeys.Y_POSITION.key, 0), 
-				estimation.getNumber(EstimatorTableKeys.ANGLE_DEGREES.key, 0));		
+				estimation.getNumber(EstimatorTableKeys.ANGLE_DEGREES.key, 0),
+				(int)estimation.getNumber(EstimatorTableKeys.GEAR.key, 0));		
+
 	}
 
 	private enum EstimatorTableKeys {
@@ -78,5 +75,6 @@ public class Run extends BasicGame{
 		}
 	}
 
+	
 
 }
