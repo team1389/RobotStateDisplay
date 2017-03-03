@@ -32,6 +32,7 @@ public class Run extends BasicGame{
 		cont.setTargetFrameRate(70);
 		cont.setFullscreen(true);
 		cont.setDisplayMode(width, height, false);
+		cont.setAlwaysRender(true);
 		cont.start();
 
 	}
@@ -59,16 +60,19 @@ public class Run extends BasicGame{
 
 	@Override
 	public void update(GameContainer arg0, int delta) throws SlickException {
-		
+		boolean placed = estimation.getBoolean(EstimatorTableKeys.GEARPLACED.key, false);
+		if(placed){
+			estimation.putBoolean(EstimatorTableKeys.GEARPLACED.key, false);
+		}
 		robot.setPosition(estimation.getNumber(EstimatorTableKeys.X_POSITION.key, 0),
 				estimation.getNumber(EstimatorTableKeys.Y_POSITION.key, 0), 
 				estimation.getNumber(EstimatorTableKeys.ANGLE_DEGREES.key, 0),
-				(int)estimation.getNumber(EstimatorTableKeys.GEAR.key, 0));		
+				placed);		
 
 	}
 
 	private enum EstimatorTableKeys {
-		X_POSITION("x"), Y_POSITION("y"), ANGLE_DEGREES("angle"), GEAR("gear");
+		X_POSITION("x"), Y_POSITION("y"), ANGLE_DEGREES("angle"), GEAR("gear"), GEARPLACED("placed");
 		protected final String key;
 		private EstimatorTableKeys(String key) {
 			this.key = key;

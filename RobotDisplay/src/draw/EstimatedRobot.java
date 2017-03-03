@@ -29,6 +29,8 @@ public class EstimatedRobot {
 	double x;
 	double y;
 	double theta;
+	private double yTranslate = 0;
+	private double xTranslate = 0;
 	
 	public EstimatedRobot(SimulationField field) {
 		this(field, Alliance.RED);
@@ -60,14 +62,15 @@ public class EstimatedRobot {
 	
 
 
-	public void setPosition(double x, double y, double theta, int gear) {
+	public void setPosition(double x, double y, double theta, boolean placed) {
 		this.x = x;
 		this.y = y;
 		this.theta = theta;
-		Gear currentGearState = getGear(gear);
-		if(currentGearState.equals(currentGearState.PLACING)){
+		/*Gear currentGearState = getGear(placed);
+		if(currentGearState.equals(Gear.PLACING)){
 			placingGearReset();
-		}
+		}*/
+		if(placed) placingGearReset();
 		
 
 	}
@@ -88,11 +91,11 @@ public class EstimatedRobot {
 
 	public void placingGearReset(){
 		if(alliance.equals(Alliance.RED)){
-			if(theta < -40){
+			if(theta < -25){
 				setAbsolutePosition(140, 250);
 			}
-			else if(theta > 40){
-				setAbsolutePosition(156, 250);
+			else if(theta > 25){
+				setAbsolutePosition(156, 125);
 			}
 			else{
 				setAbsolutePosition(118, 185);
@@ -104,11 +107,11 @@ public class EstimatedRobot {
 	}
 	
 	/**
-	 * Scale assumed to be zero for input values
+	 * Scale assumed to be 1 for input values
 	 */
 	public void setAbsolutePosition(double x, double y){
-		this.x = x * Run.scale;
-		this.y = y * Run.scale;
+		this.xTranslate = x * Run.scale - (this.x);
+		this.yTranslate = y * Run.scale - (this.y);
 	}
 
 
@@ -123,7 +126,7 @@ public class EstimatedRobot {
 	public void render(GameContainer container, Graphics g){
 		robot.setRotation((float) theta + 90);
 		robot.setCenterOfRotation(robotWidth / 2, robotHeight / 2);
-		robot.drawCentered((float)x, (float)y);
+		robot.drawCentered((float)(x + xTranslate), (float)(y + yTranslate));
 	}
 	
 	
