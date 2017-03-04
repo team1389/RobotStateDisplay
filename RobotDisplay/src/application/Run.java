@@ -19,13 +19,19 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable.*;
 
 
 public class Run extends BasicGame{
-	public static int scale = 2;
+	public static final double scale = 1.8;
 	public static final int width = (int) (716 * scale);
 	public static final int height = (int) (376 * scale);
+	public static final boolean local = true;
 
 	public static void main(String[] args) throws SlickException{
 		NetworkTable.setClientMode();
-		NetworkTable.setIPAddress("127.0.0.1");
+		if(local){
+			NetworkTable.setIPAddress("localhost");
+		}
+		else{
+			NetworkTable.setTeam(1389);
+		}
 		NetworkTable.initialize();
 
 		Run r = new Run("Position Estimator");
@@ -68,7 +74,7 @@ public class Run extends BasicGame{
 			int ypos = input.getMouseY();
 			robot.setCurrentPosition(xpos/ Run.scale, ypos / Run.scale);
 		}
-		
+
 		boolean placed = estimation.getBoolean(EstimatorTableKeys.GEAR_PLACED.key, false);
 		if(placed){
 			estimation.putBoolean(EstimatorTableKeys.GEAR_PLACED.key, false);
