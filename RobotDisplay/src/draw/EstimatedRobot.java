@@ -82,36 +82,33 @@ public class EstimatedRobot {
 	public void placingGearReset(){
 		if(alliance.equals(Alliance.RED)){
 			if(theta < -25){
-				setAbsolutePosition(140, 250);
+				setCurrentPosition(140, 250);
 			}
 			else if(theta > 25){
-				setAbsolutePosition(156, 125);
+				setCurrentPosition(156, 125);
 			}
 			else{
-				setAbsolutePosition(118, 185);
+				setCurrentPosition(118, 185);
 			}
 		}
 		else{
 			if(theta < 165){
-				setAbsolutePosition(562, 132);
+				setCurrentPosition(562, 132);
 			}
 			else if(theta > 205){
-				setAbsolutePosition(569, 242);
+				setCurrentPosition(569, 242);
 			}
 			else{
-				setAbsolutePosition(596, 185);
+				setCurrentPosition(596, 185);
 			}
 		}
 
 
 	}
 
-	/**
-	 * Scale assumed to be 1 for input values
-	 */
-	public void setAbsolutePosition(double x, double y){
-		this.xTranslate = x * Run.scale - (this.x);
-		this.yTranslate = y * Run.scale - (this.y);
+	public void setCurrentPosition(double newX, double newY){
+		this.xTranslate = newX - x;
+		this.yTranslate = newY - y;
 	}
 
 
@@ -126,7 +123,7 @@ public class EstimatedRobot {
 	public void render(GameContainer container, Graphics g){
 		robot.setRotation((float) theta + 90);
 		robot.setCenterOfRotation(robotWidth / 2, robotHeight / 2);
-		robot.drawCentered((float)(getX()), (float)(getY()));
+		robot.drawCentered((float)(getX() * Run.scale), (float)(getY() * Run.scale));
 	}
 	
 	public double getX(){
